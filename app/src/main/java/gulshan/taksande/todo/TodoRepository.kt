@@ -1,13 +1,15 @@
 package gulshan.taksande.todo
 
+import androidx.lifecycle.LiveData
 import gulshan.taksande.todo.data.TodoDetail
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class TodoRepository(private val database: TodoDatabase) {
 
 
-    var todoList =  database.todoDao.getAllTodos()
+    var todoList = database.todoDao.getAllTodos()
 
 
     suspend fun insertTodo(todoDetail: TodoDetail) {
@@ -16,11 +18,9 @@ class TodoRepository(private val database: TodoDatabase) {
         }
     }
 
-//    suspend fun getAllTodo() {
-//        withContext(Dispatchers.IO) {
-//            todoList = database.todoDao.getAllTodos()
-//        }
-//    }
+    fun getAllTodo(): LiveData<List<TodoDetail>> {
+        return database.todoDao.getAllTodos()
+    }
 
     suspend fun deleteTodo(todoDetail: TodoDetail) {
         database.todoDao.deleteTodo(todoDetail)

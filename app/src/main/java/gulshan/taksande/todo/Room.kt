@@ -10,6 +10,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Update
 import gulshan.taksande.todo.data.TodoDetail
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TodoDao {
