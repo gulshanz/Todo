@@ -128,7 +128,6 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
         modifier = Modifier
             .fillMaxSize()
             .padding(20.dp)
-
     ) {
         Column {
             OutlinedTextField(value = text, onValueChange = {
