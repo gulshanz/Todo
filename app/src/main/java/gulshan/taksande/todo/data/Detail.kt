@@ -1,4 +1,4 @@
-package com.example.todoapp.data
+package gulshan.taksande.todo.data
 
 object Detail {
     val EmployDetailsList = listOf(

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.TodoDetail
+import gulshan.taksande.todo.data.TodoDetail
 import kotlinx.coroutines.launch
 
 class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
@@ -13,9 +13,16 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
     val description: MutableLiveData<String> = MutableLiveData()
     val isCompleted: MutableLiveData<Boolean> = MutableLiveData()
 
-    val allTodos: LiveData<List<TodoDetail>> =repository.todoList
+    val allTodos: LiveData<List<TodoDetail>> = repository.todoList
 
     init {
+        getAllTodos()
+    }
+
+    private fun getAllTodos() {
+        viewModelScope.launch {
+//            repository.getAllTodo()
+        }
     }
 
     fun deleteTodo(todo: TodoDetail) {
@@ -40,7 +47,6 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
 
 class TodoViewModelFactory(private val repository: TodoRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        ViewModelProvider.AndroidViewModelFactory()
         return TodoViewModel(repository) as T
     }
 }

@@ -9,7 +9,7 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Update
-import com.example.todoapp.data.TodoDetail
+import gulshan.taksande.todo.data.TodoDetail
 
 @Dao
 interface TodoDao {

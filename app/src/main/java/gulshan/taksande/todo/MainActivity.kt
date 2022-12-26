@@ -3,14 +3,26 @@ package gulshan.taksande.todo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import gulshan.taksande.todo.data.TodoDetail
 import gulshan.taksande.todo.ui.theme.TodoTheme
+import androidx.navigation.*
+import androidx.navigation.compose.ComposeNavigator
+
 
 class MainActivity : ComponentActivity() {
     lateinit var repository: TodoRepository
@@ -58,16 +70,18 @@ fun CustomRv(navController: NavHostController, viewModel: TodoViewModel) {
     } catch (e: Exception) {
         emptyList()
     }
-
-    LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-        items(employees.size, itemContent = { item ->
-            TodoCard(emp = employees[item]) {
-                navController.navigate(Screen.TodoCreateOrEdit.route)
+    Scaffold(
+        floatingActionButton = { FloatingActionButton(onClick = { navController.navigate(Screen.TodoCreateOrEdit.route) }) {} },
+        content = {
+            LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
+                items(employees.size, itemContent = { item ->
+                    TodoCard(emp = employees[item]) {
+                        navController.navigate(Screen.TodoCreateOrEdit.route)
+                    }
+                })
             }
-        })
-    }
-    FloatingActionButton(onClick = { navController.navigate(Screen.TodoCreateOrEdit.route) }) {}
-
+        }
+    )
 }
 
 
