@@ -6,14 +6,16 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -36,16 +38,14 @@ class MainActivity : ComponentActivity() {
         repository = TodoRepository(database)
         val factory = TodoViewModelFactory(repository)
         viewModel = ViewModelProvider(this, factory)[TodoViewModel::class.java]
-        viewModel.allTodos.observe(this) {
-            list = it
-        }
+
         setContent {
             TodoTheme {
                 /* A surface container using the 'background' color from the theme */
                 Surface(
                     modifier = Modifier.fillMaxSize(), color = MaterialTheme.colors.background
                 ) {
-                    TodoApp(viewModel, list)
+                    TodoApp(viewModel)
                 }
             }
         }
@@ -55,11 +55,11 @@ class MainActivity : ComponentActivity() {
 
 
 @Composable
-fun TodoApp(viewModel: TodoViewModel, list: List<TodoDetail>) {
+fun TodoApp(viewModel: TodoViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = Screen.TodoList.route) {
         composable(route = Screen.TodoList.route) {
-            CustomRv(navController, viewModel, list)
+            CustomRv(navController, viewModel)
         }
         composable(route = Screen.TodoCreateOrEdit.route) {
             CreateTodo(navController, viewModel)
@@ -69,20 +69,15 @@ fun TodoApp(viewModel: TodoViewModel, list: List<TodoDetail>) {
 
 
 @Composable
-fun CustomRv(navController: NavHostController, viewModel: TodoViewModel, list: List<TodoDetail>) {
-    val allTodos  = remember {
-        mutableStateListOf(viewModel.allTodos)
-    }
-    val employees = allTodos.forEach {
-
-    }
-
+fun CustomRv(navController: NavHostController, viewModel: TodoViewModel) {
+    val listState by viewModel.allTodos.(listOf())
+    val list = listState
     Scaffold(
         floatingActionButton = { FloatingActionButton(onClick = { navController.navigate(Screen.TodoCreateOrEdit.route) }) {} },
         content = {
             LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
-                items(employees.size, itemContent = { item ->
-                    TodoCard(emp = employees[item]) {
+                items(list.size, itemContent = { item ->
+                    TodoCard(emp = list[item]) {
                         navController.navigate(Screen.TodoCreateOrEdit.route)
                     }
                 })
@@ -91,9 +86,9 @@ fun CustomRv(navController: NavHostController, viewModel: TodoViewModel, list: L
     )
 }
 
-
+@Preview
 @Composable
-fun TodoCard(emp: TodoDetail, onClick: () -> Unit) {
+fun TodoCard(emp: TodoDetail = TodoDetail(1, "efce", "fwe", false), onClick: () -> Unit = {}) {
     val checkState = remember { mutableStateOf(emp.isCompleted) }
     Surface(modifier = Modifier
         .clickable {

@@ -1,10 +1,6 @@
 package gulshan.taksande.todo
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import gulshan.taksande.todo.data.TodoDetail
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -14,7 +10,7 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
     val description: MutableLiveData<String> = MutableLiveData()
     val isCompleted: MutableLiveData<Boolean> = MutableLiveData()
 
-     var allTodos = repository.getAllTodo()
+    val allTodos = repository.todoList.asLiveData()
 
 
     fun deleteTodo(todo: TodoDetail) {

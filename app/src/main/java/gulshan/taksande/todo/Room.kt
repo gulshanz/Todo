@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TodoDao {
     @Query("SELECT * FROM TodoDetail")
-    fun getAllTodos(): LiveData<List<TodoDetail>>
+    fun getAllTodos(): Flow<MutableList<TodoDetail>>
 
     @Update
     fun updateTodo(todoObj: TodoDetail)

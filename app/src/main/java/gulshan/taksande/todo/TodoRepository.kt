@@ -18,7 +18,7 @@ class TodoRepository(private val database: TodoDatabase) {
         }
     }
 
-    fun getAllTodo(): LiveData<List<TodoDetail>> {
+    suspend fun getAllTodo(): Flow<MutableList<TodoDetail>> {
         return database.todoDao.getAllTodos()
     }
 
