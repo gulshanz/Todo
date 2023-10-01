@@ -1,6 +1,5 @@
 package gulshan.taksande.todo
 
-import androidx.lifecycle.LiveData
 import gulshan.taksande.todo.data.TodoDetail
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +26,9 @@ class TodoRepository(private val database: TodoDatabase) {
     }
 
     suspend fun updateTodo(todoDetail: TodoDetail) {
-        database.todoDao.updateTodo(todoDetail)
+        withContext(Dispatchers.IO) {
+            database.todoDao.updateTodo(todoDetail)
+        }
     }
 
 }

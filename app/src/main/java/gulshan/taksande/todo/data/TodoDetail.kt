@@ -5,8 +5,9 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TodoDetail(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) var id: Int = 0,
     val title: String,
     val description: String,
-    var isCompleted: Boolean
+    var isCompleted: Boolean,
+//    var deadLine: Long?
 )
