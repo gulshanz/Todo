@@ -8,14 +8,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -70,14 +68,20 @@ fun TodoApp(viewModel: TodoViewModel) {
 
 @Composable
 fun CustomRv(navController: NavHostController, viewModel: TodoViewModel) {
-    val listState by viewModel.allTodos.(listOf())
-    val list = listState
+    // flow
+
+    val listFlow = viewModel.allTodos.collectAsState(initial = emptyList())
+    val list = listFlow.value
     Scaffold(
-        floatingActionButton = { FloatingActionButton(onClick = { navController.navigate(Screen.TodoCreateOrEdit.route) }) {} },
+        floatingActionButton = { FloatingActionButton(onClick = {
+            navController.navigate(Screen.TodoCreateOrEdit.route)
+            viewModel.selectedTodo = null
+        }) {} },
         content = {
             LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(list.size, itemContent = { item ->
                     TodoCard(emp = list[item]) {
+                        viewModel.selectedTodo = list[item]
                         navController.navigate(Screen.TodoCreateOrEdit.route)
                     }
                 })
@@ -131,6 +135,11 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
             .fillMaxSize()
             .padding(20.dp)
     ) {
+        viewModel.selectedTodo?.let {
+            text = it.title
+            description = it.description
+        }
+
         Column {
             OutlinedTextField(value = text, onValueChange = {
                 text = it
@@ -138,6 +147,7 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
             OutlinedTextField(value = description, onValueChange = {
                 description = it
             }, label = { Text("Description") })
+
             Button(onClick = {
                 val todoItem =
                     TodoDetail(title = text, description = description, isCompleted = false)

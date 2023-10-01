@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'gulshan.taksande.todo'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "gulshan.taksande.todo"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 1
         versionName "1.0"
 
@@ -67,6 +67,22 @@ dependencies {
     def nav_version = "2.5.3"
 
     implementation "androidx.navigation:navigation-compose:$nav_version"
+
+    def room_version = "2.5.2"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    implementation "androidx.room:room-ktx:$room_version"
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt "androidx.room:room-compiler:$room_version"
+
+    def lifecycle_version = "2.4.0"
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+
+
 
 
 }

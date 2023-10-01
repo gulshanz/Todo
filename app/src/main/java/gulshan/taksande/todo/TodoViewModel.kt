@@ -10,7 +10,9 @@ class TodoViewModel(private val repository: TodoRepository) : ViewModel() {
     val description: MutableLiveData<String> = MutableLiveData()
     val isCompleted: MutableLiveData<Boolean> = MutableLiveData()
 
-    val allTodos = repository.todoList.asLiveData()
+    var selectedTodo:TodoDetail? = null
+
+    val allTodos = repository.todoList
 
 
     fun deleteTodo(todo: TodoDetail) {
