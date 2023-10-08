@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -80,7 +79,7 @@ fun CustomRv(navController: NavHostController, viewModel: TodoViewModel) {
         content = {
             LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
                 items(list.size, itemContent = { item ->
-                    TodoCard(emp = list[item]) {
+                    TodoCard(todoItem = list[item]) {
                         viewModel.selectedTodo = list[item]
                         navController.navigate(Screen.TodoCreateOrEdit.route)
                     }
@@ -90,10 +89,9 @@ fun CustomRv(navController: NavHostController, viewModel: TodoViewModel) {
     )
 }
 
-@Preview
 @Composable
-fun TodoCard(emp: TodoDetail = TodoDetail(1, "efce", "fwe", false), onClick: () -> Unit = {}) {
-    val checkState = remember { mutableStateOf(emp.isCompleted) }
+fun TodoCard(todoItem: TodoDetail, onClick: () -> Unit = {}) {
+    val checkState = remember { mutableStateOf(todoItem.isCompleted) }
     Surface(modifier = Modifier
         .clickable {
             onClick.invoke()
@@ -107,12 +105,12 @@ fun TodoCard(emp: TodoDetail = TodoDetail(1, "efce", "fwe", false), onClick: () 
         ) {
             Column(modifier = Modifier.weight(1f), Arrangement.Center) {
                 Text(
-                    text = emp.title, style = TextStyle(
+                    text = todoItem.title, style = TextStyle(
                         color = Color.Black, fontSize = 22.sp, fontWeight = FontWeight.Bold
                     )
                 )
                 Text(
-                    text = "Description -:" + emp.description, style = TextStyle(
+                    text = "Description -:" + todoItem.description, style = TextStyle(
                         color = Color.Black
                     )
                 )
@@ -130,6 +128,7 @@ fun TodoCard(emp: TodoDetail = TodoDetail(1, "efce", "fwe", false), onClick: () 
 fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
     var text by rememberSaveable { mutableStateOf("") }
     var description by rememberSaveable { mutableStateOf("") }
+    var isCompleted by rememberSaveable{ mutableStateOf(false) }
     Surface(
         modifier = Modifier
             .fillMaxSize()
@@ -138,6 +137,7 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
         viewModel.selectedTodo?.let {
             text = it.title
             description = it.description
+            isCompleted = it.isCompleted
         }
 
         Column {
@@ -150,7 +150,7 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
 
             Button(onClick = {
                 val todoItem =
-                    TodoDetail(title = text, description = description, isCompleted = false)
+                    TodoDetail(title = text, description = description, isCompleted = isCompleted)
                 viewModel.insertTodo(todoItem)
                 navController.navigateUp()
             }, content = { Text("Submit") })

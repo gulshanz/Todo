@@ -27,7 +27,7 @@ fun CustomRv(navController: NavHostController, viewModel: TodoViewModel) {
         LazyColumn(contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)) {
             items(list.size, itemContent = { item ->
                 TodoCard(emp = list[item], viewModel) {
-                    viewModel.selectedItem(list[item])
+                    viewModel.selectedTodo = list[item]
                     navController.navigate(Screen.TodoCreateOrEdit.route)
                 }
             })

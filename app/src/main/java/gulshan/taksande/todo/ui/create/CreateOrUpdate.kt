@@ -27,7 +27,7 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
     var dateTime by rememberSaveable { mutableStateOf("") }
     var selectedDate by rememberSaveable { mutableStateOf(LocalDate.now()) }
     var selectedTime by rememberSaveable { mutableStateOf(LocalTime.now()) }
-    val selectedItem = viewModel.selectedItem
+    val selectedItem = viewModel.selectedTodo
     if (selectedItem != null) {
         text = selectedItem.title
         description = selectedItem.description
@@ -55,18 +55,18 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
                     .weight(1f), onClick = {
                     val todoItem =
                         TodoDetail(title = text, description = description, isCompleted = false)
-                    if (viewModel.selectedItem == null) viewModel.insertTodo(todoItem)
+                    if (viewModel.selectedTodo == null) viewModel.insertTodo(todoItem)
                     else {
                         todoItem.id = selectedItem!!.id
-                        viewModel.updateTodo(todoItem)
+                        viewModel.editTodo(todoItem)
                     }
-                    viewModel.selectedItem = null
+                    viewModel.selectedTodo = null
                     navController.navigateUp()
                 }, content = { Text("Submit") })
                 Button(modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f), onClick = {
-                    viewModel.selectedItem = null
+                    viewModel.selectedTodo = null
                     navController.navigateUp()
                 }, content = { Text("Cancel") })
 
@@ -75,7 +75,7 @@ fun CreateTodo(navController: NavHostController, viewModel: TodoViewModel) {
         BackHandler(
             enabled = true
         ) {
-            viewModel.selectedItem = null
+            viewModel.selectedTodo = null
         }
     }
 }

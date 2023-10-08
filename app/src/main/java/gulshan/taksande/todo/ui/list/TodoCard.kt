@@ -51,7 +51,7 @@ fun TodoCard(
             }
             Checkbox(checked = checkState.value, onCheckedChange = {
                 emp.isCompleted = !emp.isCompleted
-                viewModel.updateTodo(emp)
+                viewModel.editTodo(emp)
                 checkState.value = it
             })
         }
